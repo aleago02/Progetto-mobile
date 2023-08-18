@@ -20,6 +20,16 @@ class GameViewModel : ViewModel(){
     private var wordsList: MutableList<String> = mutableListOf()
     private lateinit var currentWord: String
 
+    private var _uriList: MutableList<String> = mutableListOf()
+    private var _yearList: MutableList<String> = mutableListOf()
+
+    var uriList: MutableList<String> = TODO()
+        get() = _uriList
+
+    var yearList: MutableList<String> = TODO()
+        get() = _yearList
+
+
     init {
         Log.d("GameFragment", "GameViewModel created!")
         getNextWord()
@@ -49,6 +59,17 @@ class GameViewModel : ViewModel(){
             ++_currentWordCount
             wordsList.add(currentWord)
         }
+        _uriList.clear()
+        _yearList.clear()
+        getNextSquad()
+    }
+
+    private fun getNextSquad(){
+
+        //qui da fare le chimate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
+        _uriList.contains(allSquadList.get(1))
+        _yearList.contains(allYearList.get(1))
+
     }
 
 

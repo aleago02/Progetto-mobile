@@ -12,6 +12,19 @@
         android:padding="@dimen/default_padding"
         tools:context=".ui.game.GameFragment">
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="181dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/word_count"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+
+
+
         <Button
             android:id="@+id/skip"
             style="?attr/materialButtonOutlinedStyle"
@@ -49,7 +62,7 @@
             android:id="@+id/textView_unscrambled_word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginTop="200dp"
             android:layout_marginBottom="@dimen/default_margin"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             app:layout_constraintBottom_toTopOf="@+id/textView_instructions"
