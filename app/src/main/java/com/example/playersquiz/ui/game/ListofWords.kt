@@ -16,7 +16,6 @@
 
 package com.example.playersquiz.ui.game
 
-import java.net.URL
 
 
 const val MAX_NO_OF_WORDS = 10
@@ -204,7 +203,7 @@ val allWordsList: List<String> =
         "zone",
         "zeal")
 val allSquadList: List<String> =
-    listOf("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/1200px-Los_Angeles_Lakers_logo.svg.png",
+    listOf("https://pluspng.com/img-png/los-angeles-lakers-logo-png-lakers-logo-png-los-angeles-lakers-png-image-with-transparent-840x859.png",
         "https://flyclipart.com/thumb2/boston-celtics-logo-219435.png")
 
 val allYearList: List<String> =

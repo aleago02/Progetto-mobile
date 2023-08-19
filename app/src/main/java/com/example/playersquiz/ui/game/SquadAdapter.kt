@@ -13,37 +13,35 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playersquiz.R
 import java.io.IOException
-import java.net.HttpURLConnection
+import java.io.InputStream
 import java.net.URL
 
 
-class SquadAdapter(val yearList: MutableList<String>, val uriList: MutableList<String>): RecyclerView.Adapter<SquadAdapter.SquadViewHolder>() {
+class SquadAdapter(private val yearList: MutableList<String>, private val uriList: MutableList<String>): RecyclerView.Adapter<SquadAdapter.SquadViewHolder>() {
 
     class SquadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val SquadyearView: TextView = itemView.findViewById(R.id.year)
-        private val SquadimgView: ImageView = itemView.findViewById(R.id.imageView)
+        private val squadyearview: TextView = itemView.findViewById(R.id.year)
+        private val squadimgview: ImageView = itemView.findViewById(R.id.imageView)
 
-        fun getBitmapFromURL(src: String?): Bitmap? {
+        private fun getBitmapFromURL(src: String?): Bitmap? {
+            val inputStream: InputStream
+            val bitmap: Bitmap
             return try {
                 Log.e("src", src!!)
-                val url = URL(src)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val input = connection.inputStream
-                val myBitmap = BitmapFactory.decodeStream(input)
+                inputStream = URL(src).openStream()
+                bitmap = BitmapFactory.decodeStream(inputStream)
                 Log.e("Bitmap", "returned")
-                return myBitmap
+                bitmap
             } catch (e: IOException) {
                 e.printStackTrace()
                 Log.e("Exception", e.message!!)
-                return null
+                null
             }
         }
 
         fun bind(year: String, url: String) {
-            SquadyearView.text = year
-            SquadimgView.setImageBitmap(getBitmapFromURL(url));
+            squadyearview.text = year
+            squadimgview.setImageBitmap(getBitmapFromURL(url))
         }
 
 

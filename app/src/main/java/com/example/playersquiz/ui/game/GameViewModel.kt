@@ -23,16 +23,17 @@ class GameViewModel : ViewModel(){
     private var _uriList: MutableList<String> = mutableListOf()
     private var _yearList: MutableList<String> = mutableListOf()
 
-    var uriList: MutableList<String> = TODO()
+    val uriList: MutableList<String>
         get() = _uriList
 
-    var yearList: MutableList<String> = TODO()
+    val yearList: MutableList<String>
         get() = _yearList
 
 
     init {
-        Log.d("GameFragment", "GameViewModel created!")
         getNextWord()
+        getNextSquad()
+        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
     }
 
     override fun onCleared() {
@@ -59,16 +60,16 @@ class GameViewModel : ViewModel(){
             ++_currentWordCount
             wordsList.add(currentWord)
         }
-        _uriList.clear()
-        _yearList.clear()
-        getNextSquad()
+      //  _uriList.clear()
+      //  _yearList.clear()
+       // getNextSquad()
     }
 
     private fun getNextSquad(){
 
         //qui da fare le chimate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
-        _uriList.contains(allSquadList.get(1))
-        _yearList.contains(allYearList.get(1))
+        _uriList.add(allSquadList[0])
+        _yearList.add(allYearList[0])
 
     }
 

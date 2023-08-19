@@ -21,8 +21,8 @@ class GameFragment: Fragment(){
     // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: GameFragmentBinding
     //private var recyclerView: RecyclerView = binding.recyclerView
-    protected var mAdapter: SquadAdapter? = null
-    protected var mLayoutManager: RecyclerView.LayoutManager? = null
+    private var mAdapter: SquadAdapter? = null
+    private var mLayoutManager: RecyclerView.LayoutManager? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +60,7 @@ class GameFragment: Fragment(){
     private fun updateNextImgOnScreen() {
         Log.d("updateNextImgOnScreen", "yearList : ${viewModel.yearList} uriList : ${viewModel.uriList}")
         mAdapter = SquadAdapter(viewModel.yearList, viewModel.uriList)
-        binding.recyclerView!!.adapter = mAdapter
+        binding.recyclerView.adapter = mAdapter
     }
 
     private fun onSubmitWord() {
