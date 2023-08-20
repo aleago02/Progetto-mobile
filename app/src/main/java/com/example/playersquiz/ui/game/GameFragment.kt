@@ -5,10 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,8 +20,9 @@ class GameFragment: Fragment(){
     // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: GameFragmentBinding
     //private var recyclerView: RecyclerView = binding.recyclerView
-    private var mAdapter: SquadAdapter? = null
-    private var mLayoutManager: RecyclerView.LayoutManager? = null
+    private lateinit var customAdapter: Adapter
+    private lateinit var gridView: GridView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,12 +39,6 @@ class GameFragment: Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mLayoutManager = GridLayoutManager(
-            activity,
-            2
-        )
-        binding.recyclerView.layoutManager = mLayoutManager
-        binding.recyclerView.scrollToPosition(0)
 
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
@@ -59,8 +53,9 @@ class GameFragment: Fragment(){
 
     private fun updateNextImgOnScreen() {
         Log.d("updateNextImgOnScreen", "yearList : ${viewModel.yearList} uriList : ${viewModel.uriList}")
-        mAdapter = SquadAdapter(viewModel.yearList, viewModel.uriList)
-        binding.recyclerView.adapter = mAdapter
+        customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
+        gridView = binding.gridView.findViewById(R.id.gridView)
+        gridView.adapter = customAdapter
     }
 
     private fun onSubmitWord() {
