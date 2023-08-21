@@ -70,6 +70,8 @@ class GameViewModel : ViewModel(){
         //qui da fare le chimate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
         _uriList.add(allSquadList[0])
         _yearList.add(allYearList[0])
+        _uriList.add(allSquadList[1])
+        _yearList.add(allYearList[1])
 
     }
 

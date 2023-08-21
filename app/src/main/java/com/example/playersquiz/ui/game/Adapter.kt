@@ -42,7 +42,7 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
 
         //set Image
         Glide.with(context)
-            .load(uriList)
+            .load(uriList[position])
             .into(squadimgview)
 
         return view
