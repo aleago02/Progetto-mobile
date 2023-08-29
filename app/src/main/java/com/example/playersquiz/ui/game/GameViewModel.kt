@@ -2,6 +2,7 @@ package com.example.playersquiz.ui.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.playersquiz.viewmodels.HomePageViewModel
 
 class GameViewModel : ViewModel(){
 

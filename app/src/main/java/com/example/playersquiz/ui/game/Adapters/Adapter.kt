@@ -1,4 +1,4 @@
-package com.example.playersquiz.ui.game
+package com.example.playersquiz.ui.game.Adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,16 +11,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.playersquiz.R
+import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
 
-class Adapter(private val uriList: MutableList<String>, private val yearList: MutableList<String>, private val context: Context) : BaseAdapter() {
+class Adapter(private val transfersList: List<RootMetadataSupportResponseRemoteModel>, private val context: Context) : BaseAdapter() {
 
 
     override fun getCount(): Int {
-        return yearList.size
+        return transfersList.size
     }
 
     override fun getItem(p0: Int): Any? {
-        return null
+        return transfersList[p0]
     }
 
     override fun getItemId(position: Int): Long {
@@ -36,13 +37,15 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
         val squadyearview: TextView = view.findViewById(R.id.year)
         val squadimgview: ImageView = view.findViewById(R.id.imageView)
 
-        Log.d("getView", "yearList : ${yearList} uriList ${uriList} ")
+        Log.d("getView", "yearList : ${transfersList}")
         //set data
-        squadyearview.text = yearList[position]
+        val transfer = transfersList[position]
+        squadyearview.text = transfer.player?.name ?: ""
 
         //set Image
+        val imageUrl  = transfer.player?.id ?: ""
         Glide.with(context)
-            .load(uriList[position])
+            .load(imageUrl)
             .into(squadimgview)
 
         return view
