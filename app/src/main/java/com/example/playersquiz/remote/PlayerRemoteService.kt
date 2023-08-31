@@ -12,5 +12,5 @@ interface PlayerRemoteService {
         "X-RapidAPI-Host: api-football-v1.p.rapidapi.com"
     )
     @GET("/v3/transfers")
-    suspend fun getMetadata(@Query("player") player: Long): ResponseRootTransfersModel
+    fun getMetadata(@Query("player") player: Long): ResponseRootTransfersModel
 }

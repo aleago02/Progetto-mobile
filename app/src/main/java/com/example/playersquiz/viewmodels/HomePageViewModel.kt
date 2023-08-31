@@ -6,17 +6,10 @@ import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
 import kotlinx.coroutines.launch
 
-interface HomePageViewModelListener {
-    fun onTransfersList(list: List<RootMetadataSupportResponseRemoteModel>)
-}
-class HomePageViewModel: ViewModel() {
-
-    private var listener: HomePageViewModelListener? = null
-    fun getPlayer(player: Long) {
-        viewModelScope.launch {
-            val metadata = RemoteApi.playerRemoteService.getMetadata(player)
-            val transfersList = metadata.response ?: emptyList()
-            listener?.onTransfersList(transfersList)
-        }
+class HomePageViewModel {
+    fun getPlayer(player: Long): List<RootMetadataSupportResponseRemoteModel> {
+        val metadata = RemoteApi.playerRemoteService.getMetadata(player)
+        val transfers = metadata.response ?: emptyList()
+        return transfers
     }
 }

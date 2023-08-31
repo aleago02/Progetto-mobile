@@ -2,11 +2,14 @@ package com.example.playersquiz.ui.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
+import com.example.playersquiz.ui.game.adapters.AdapterTransfer
 import com.example.playersquiz.viewmodels.HomePageViewModel
 
-class GameViewModel : ViewModel(){
+class GameViewModel : ViewModel() {
 
     private var _score = 0
+    private var transfersList: List<RootMetadataSupportResponseRemoteModel>
     val score: Int
         get() = _score
 
@@ -32,9 +35,16 @@ class GameViewModel : ViewModel(){
 
 
     init {
+       val call = HomePageViewModel()
+        transfersList = call.getPlayer((generateRandomPLayerId()))
+        Log.d("callAPI", "$transfersList")
         getNextWord()
         getNextSquad()
         Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
+    }
+
+    private fun generateRandomPLayerId() : Long {
+        return (1..200015).random().toLong()
     }
 
     override fun onCleared() {
@@ -68,12 +78,12 @@ class GameViewModel : ViewModel(){
 
     private fun getNextSquad(){
 
-        //qui da fare le chimate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
-        _uriList.add(allSquadList[0])
-        _yearList.add(allYearList[0])
-        _uriList.add(allSquadList[1])
-        _yearList.add(allYearList[1])
+        val adapterTransfer = AdapterTransfer(transfersList)
 
+
+        //qui da fare le chiamate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
+        _uriList = adapterTransfer.getLogo()
+        _yearList = adapterTransfer.getDate()
     }
 
 
@@ -102,6 +112,4 @@ class GameViewModel : ViewModel(){
             true
         } else false
     }
-
-
 }

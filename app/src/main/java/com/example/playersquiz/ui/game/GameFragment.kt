@@ -10,24 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
-import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
-import com.example.playersquiz.ui.game.Adapters.Adapter
-import com.example.playersquiz.viewmodels.HomePageViewModel
-import com.example.playersquiz.viewmodels.HomePageViewModelListener
+import com.example.playersquiz.ui.game.adapters.Adapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
-class GameFragment: Fragment(), HomePageViewModelListener {
-    private val viewModel: HomePageViewModel by viewModels()
+class GameFragment: Fragment() {
     private val gameViewModel: GameViewModel by viewModels()
-
     // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: GameFragmentBinding
     //private var recyclerView: RecyclerView = binding.recyclerView
     private lateinit var customAdapter: Adapter
     private lateinit var gridView: GridView
-
-    private lateinit var transfersList: List<RootMetadataSupportResponseRemoteModel>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,19 +28,14 @@ class GameFragment: Fragment(), HomePageViewModelListener {
 
 
     ): View {
+
         // Inflate the layout XML file and return a binding object instance
-        val player = generateRandomPLayerId()
-        viewModel.getPlayer(player)
-        Log.d("callAPI", "$viewModel")
         binding = GameFragmentBinding.inflate(inflater, container, false)
         Log.d("GameFragment", "GameFragment created/re-created!")
 
         return binding.root
     }
 
-    private fun generateRandomPLayerId() : Long {
-        return (1..200015).random().toLong()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,7 +54,7 @@ class GameFragment: Fragment(), HomePageViewModelListener {
 
     private fun updateNextImgOnScreen() {
         Log.d("updateNextImgOnScreen", "yearList : ${gameViewModel.yearList} uriList : ${gameViewModel.uriList}")
-        customAdapter = Adapter(transfersList, requireContext())
+        customAdapter = Adapter(gameViewModel.uriList, gameViewModel.yearList, context = requireContext().applicationContext)
         gridView = binding.gridView.findViewById(R.id.gridView)
         gridView.adapter = customAdapter
     }
@@ -150,8 +138,4 @@ class GameFragment: Fragment(), HomePageViewModelListener {
             R.string.word_count, gameViewModel.currentWordCount, MAX_NO_OF_WORDS)
     }
 
-    override fun onTransfersList(list: List<RootMetadataSupportResponseRemoteModel>) {
-        customAdapter = Adapter(list, requireContext().applicationContext)
-        gridView.adapter = customAdapter
-    }
 }
