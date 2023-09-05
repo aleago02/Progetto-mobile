@@ -139,8 +139,11 @@ class GameViewModel : ViewModel(){
             Log.d("ViewModel Launch", "prima del metadata")
             val metadata = RemoteApi.apiService.getMetadata(100)
             Log.d("ViewModel Launch", "dopo del metadata")
-            val result = metadata.response
-            Log.d("ViewModel Launch", ""+ (result?.get(0)?.player?.name))
+            val result = metadata.res?.get(0)?.response?.get(0)
+            Log.d("ViewModel Launch", ""+ (result?.player?.name))
+            if (result != null) {
+                Log.d("ViewModel Launch", ""+ (result.player.name))
+            }
 
         }
 

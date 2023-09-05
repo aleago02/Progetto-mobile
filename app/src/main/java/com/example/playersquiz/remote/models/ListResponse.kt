@@ -1,3 +1,3 @@
 package com.example.playersquiz.remote.models
 
-class ListResponse: ArrayList<MyData>()
+data class ListResponse( val res: List<MyData>?)

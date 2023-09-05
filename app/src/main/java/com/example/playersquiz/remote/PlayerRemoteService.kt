@@ -1,12 +1,13 @@
 package com.example.playersquiz.remote
 
 
+
+import com.example.playersquiz.remote.models.ListResponse
 import com.example.playersquiz.remote.models.MyData
-import com.example.playersquiz.remote.old.ResponseRootTransfersModel
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
+
 
 interface ApiService {
 
@@ -17,6 +18,6 @@ interface ApiService {
         "x-rapidapi-host: api-football-v1.p.rapidapi.com"
     )
     @GET("transfers")
-    suspend fun getMetadata(@Query("player") player: Long): MyData
+    suspend fun getMetadata(@Query("player") player: Long): ListResponse
 
 }

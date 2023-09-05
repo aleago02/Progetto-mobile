@@ -7,9 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RemoteApi {
-
     private const val BASE_URL = "https://v3.football.api-sports.io/"
-
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val retrofit = Retrofit.Builder()
