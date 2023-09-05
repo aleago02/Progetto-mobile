@@ -15,24 +15,19 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class GameFragment: Fragment() {
-    private val gameViewModel: GameViewModel by viewModels()
+    private val viewModel: GameViewModel by viewModels()
     // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: GameFragmentBinding
-    //private var recyclerView: RecyclerView = binding.recyclerView
     private lateinit var customAdapter: Adapter
     private lateinit var gridView: GridView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
-
     ): View {
-
         // Inflate the layout XML file and return a binding object instance
         binding = GameFragmentBinding.inflate(inflater, container, false)
         Log.d("GameFragment", "GameFragment created/re-created!")
-
         return binding.root
     }
 
@@ -45,16 +40,16 @@ class GameFragment: Fragment() {
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
         // Update the UI
-        Log.d("updateNextImgOnScreen", "yearList : ${gameViewModel.yearList} uriList : ${gameViewModel.uriList}")
+
         updateNextImgOnScreen()
-        updateNextWordOnScreen()
+//        updateNextWordOnScreen()
         updateScoreOnScreen()
 
     }
 
     private fun updateNextImgOnScreen() {
-        Log.d("updateNextImgOnScreen", "yearList : ${gameViewModel.yearList} uriList : ${gameViewModel.uriList}")
-        customAdapter = Adapter(gameViewModel.uriList, gameViewModel.yearList, context = requireContext().applicationContext)
+        Log.d("updateNextImgOnScreen", "yearList : ${viewModel.yearList} uriList : ${viewModel.uriList}")
+        customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
         gridView = binding.gridView.findViewById(R.id.gridView)
         gridView.adapter = customAdapter
     }
@@ -62,9 +57,9 @@ class GameFragment: Fragment() {
     private fun onSubmitWord() {
         val playerWord = binding.textInputEditText.text.toString()
 
-        if (gameViewModel.isUserWordCorrect(playerWord)) {
+        if (viewModel.isUserWordCorrect(playerWord)) {
             setErrorTextField(false)
-            if (gameViewModel.nextWord()) {
+            if (viewModel.nextWord()) {
                 updateNextWordOnScreen()
                 updateScoreOnScreen()
                 updateNextImgOnScreen()
@@ -77,7 +72,7 @@ class GameFragment: Fragment() {
     }
 
     private fun onSkipWord() {
-        if (gameViewModel.nextWord()) {
+        if (viewModel.nextWord()) {
             setErrorTextField(false)
             updateNextWordOnScreen()
             updateScoreOnScreen()
@@ -90,7 +85,7 @@ class GameFragment: Fragment() {
     private fun showFinalScoreDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.congratulations))
-            .setMessage(getString(R.string.you_scored, gameViewModel.score))
+            .setMessage(getString(R.string.you_scored, viewModel.score))
             .setCancelable(false)
             .setNegativeButton(getString(R.string.exit)) { _, _ ->
                 exitGame()
@@ -112,7 +107,7 @@ class GameFragment: Fragment() {
     }
 
     private fun restartGame() {
-        gameViewModel.reinitializeData()
+        viewModel.reinitializeData()
         setErrorTextField(false)
         updateNextWordOnScreen()
     }
@@ -127,15 +122,15 @@ class GameFragment: Fragment() {
     }
 
     private fun updateNextWordOnScreen() {
-        Log.d("updateNextWordOnScreen", " score: ${gameViewModel.currentScrambledWord}")
-        binding.textViewUnscrambledWord.text = gameViewModel.currentScrambledWord
+        Log.d("updateNextWordOnScreen", " score: ${viewModel.currentScrambledWord}")
+        binding.textViewUnscrambledWord.text = viewModel.currentScrambledWord
     }
 
     private fun updateScoreOnScreen(){
-        Log.d("updateScoreOnScreen", " score: ${gameViewModel.score}")
-        binding.score.text = getString(R.string.score, gameViewModel.score)
+        Log.d("updateScoreOnScreen", " score: ${viewModel.score}")
+        binding.score.text = getString(R.string.score, viewModel.score)
         binding.wordCount.text = getString(
-            R.string.word_count, gameViewModel.currentWordCount, MAX_NO_OF_WORDS)
+            R.string.word_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
     }
 
 }

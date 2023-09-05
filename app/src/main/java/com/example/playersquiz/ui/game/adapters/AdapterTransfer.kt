@@ -1,21 +1,20 @@
 package com.example.playersquiz.ui.game.adapters
 
-import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
+import com.example.playersquiz.remote.models.MyData
+import com.example.playersquiz.remote.old.RootMetadataSupportResponseRemoteModel
 
-class AdapterTransfer(private val transfers: List<RootMetadataSupportResponseRemoteModel>) {
+class AdapterTransfer(private val transfers: MyData?) {
 
-    fun getPlayerName(): String? {
-        return transfers[0].player?.name
-    }
+//   fun getPlayerName(): String? {
+//        return transfers[0].player?.name
+//    }
 
     fun getLogo():MutableList<String> {
         val logoList: MutableList<String> = mutableListOf()
         var i=0
-        while (i< transfers[0].transfers?.size!!)
+        while (i< transfers?.response?.get(0)?.transfers?.size !!)
         {
-            if (transfers[0].transfers?.get(i)?.teams?.int?.logo != null) {
-                logoList.add(transfers[0].transfers?.get(i)?.teams?.int?.logo!!)
-            }
+            logoList.add(transfers.response[0].transfers[i].teams.`in`.logo)
             i++
         }
         return logoList
@@ -24,11 +23,9 @@ class AdapterTransfer(private val transfers: List<RootMetadataSupportResponseRem
     fun getDate():MutableList<String> {
         val dateList: MutableList<String> = mutableListOf()
         var i=0
-        while (i< transfers[0].transfers?.size!!)
+        while (i< transfers?.response?.get(0)?.transfers?.size !!)
         {
-            if (transfers[0].transfers?.get(i)?.date != null) {
-                dateList.add(transfers[0].transfers?.get(i)?.date!!.toString())
-            }
+            dateList.add(transfers.response[0].transfers[i].date)
             i++
         }
         return dateList

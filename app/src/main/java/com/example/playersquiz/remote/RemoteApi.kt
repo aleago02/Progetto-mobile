@@ -3,22 +3,22 @@ package com.example.playersquiz.remote
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RemoteApi {
 
-    private val BASE_URL = "https://api-football-v1.p.rapidapi.com/"
+    private const val BASE_URL = "https://v3.football.api-sports.io/"
 
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl(BASE_URL)
-        .build()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(BASE_URL)
+            .build()
 
-    val playerRemoteService: PlayerRemoteService by lazy {
-        retrofit.create(PlayerRemoteService::class.java)
+    val apiService: ApiService by lazy{
+        retrofit.create(ApiService::class.java)
     }
+
 }

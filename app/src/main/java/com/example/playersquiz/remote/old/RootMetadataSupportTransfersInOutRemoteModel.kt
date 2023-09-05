@@ -1,4 +1,4 @@
-package com.example.playersquiz.remote.models
+package com.example.playersquiz.remote.old
 
 data class RootMetadataSupportTransfersInOutRemoteModel (
     val id: Long? = null,

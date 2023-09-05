@@ -2,14 +2,21 @@ package com.example.playersquiz.ui.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.playersquiz.remote.models.RootMetadataSupportResponseRemoteModel
+import androidx.lifecycle.viewModelScope
+
+import com.example.playersquiz.remote.models.MyData
 import com.example.playersquiz.ui.game.adapters.AdapterTransfer
-import com.example.playersquiz.viewmodels.HomePageViewModel
+import com.example.playersquiz.remote.RemoteApi
+import com.example.playersquiz.remote.models.Prova
+import com.example.playersquiz.remote.models.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
+class GameViewModel : ViewModel(){
 
+    private lateinit var dataSource: List<Prova>
     private var _score = 0
-    private var transfersList: List<RootMetadataSupportResponseRemoteModel>
+    private lateinit var transfersList: MyData
     val score: Int
         get() = _score
 
@@ -35,12 +42,12 @@ class GameViewModel : ViewModel() {
 
 
     init {
-       val call = HomePageViewModel()
-        transfersList = call.getPlayer((generateRandomPLayerId()))
-        Log.d("callAPI", "$transfersList")
-        getNextWord()
-        getNextSquad()
-        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
+        val id = generateRandomPLayerId()
+        Log.d("generateRandomPLayerId()", "number id : $id")
+        getPOIList()
+//        getNextWord()
+//        getNextSquad()
+//        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
     }
 
     private fun generateRandomPLayerId() : Long {
@@ -111,5 +118,31 @@ class GameViewModel : ViewModel() {
             getNextWord()
             true
         } else false
+    }
+
+    fun onLocationListRetrieved(list: List<Response>) {
+        Log.d("onLocationListRetrieved 2", list[0].player.name)
+        dataSource = list.map {
+            Prova(
+                player = it.player.name,
+                name = it.transfers[0].teams.`in`.name,
+                date = it.transfers[0].date,
+                logo = it.transfers[0].teams.`in`.logo
+            )
+        }
+
+
+    }
+
+    private fun getPOIList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("ViewModel Launch", "prima del metadata")
+            val metadata = RemoteApi.apiService.getMetadata(100)
+            Log.d("ViewModel Launch", "dopo del metadata")
+            val result = metadata.response
+            Log.d("ViewModel Launch", ""+ (result?.get(0)?.player?.name))
+
+        }
+
     }
 }

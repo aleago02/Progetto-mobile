@@ -35,7 +35,7 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
         val squadyearview: TextView = view.findViewById(R.id.year)
         val squadimgview: ImageView = view.findViewById(R.id.imageView)
 
-        Log.d("getView", "yearList : ${yearList} uriList ${uriList} ")
+        Log.d("getView", "yearList : $yearList uriList $uriList ")
         //set data
         squadyearview.text = yearList[position]
 

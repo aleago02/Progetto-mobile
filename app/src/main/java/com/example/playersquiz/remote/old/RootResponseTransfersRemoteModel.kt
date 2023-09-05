@@ -1,4 +1,4 @@
-package com.example.playersquiz.remote.models
+package com.example.playersquiz.remote.old
 
 import java.util.Date
 data class RootResponseTransfersRemoteModel (
