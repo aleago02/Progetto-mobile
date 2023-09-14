@@ -1,7 +1,7 @@
 package com.example.playersquiz.ui.game.adapters
 
 import com.example.playersquiz.remote.models.MyData
-import com.example.playersquiz.remote.old.RootMetadataSupportResponseRemoteModel
+
 
 class AdapterTransfer(private val transfers: MyData?) {
 

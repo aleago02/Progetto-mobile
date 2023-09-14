@@ -96,7 +96,7 @@ dependencies {
     //coil
     implementation("io.coil-kt:coil:1.3.0")
 
-    implementation("com.squareup.retrofit2:converter-gson:2.1.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.7.0")
 
     implementation("com.github.ChickenHook:RestrictionBypass:2.2")
 }

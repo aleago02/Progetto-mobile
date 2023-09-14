@@ -1,6 +1,7 @@
 package com.example.playersquiz.ui.game
 
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -11,6 +12,8 @@ import com.example.playersquiz.remote.models.Prova
 import com.example.playersquiz.remote.models.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
 
 class GameViewModel : ViewModel(){
 
@@ -44,7 +47,7 @@ class GameViewModel : ViewModel(){
     init {
         val id = generateRandomPLayerId()
         Log.d("generateRandomPLayerId()", "number id : $id")
-        getPOIList()
+        getPOIList(id)
 //        getNextWord()
 //        getNextSquad()
 //        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
@@ -61,7 +64,6 @@ class GameViewModel : ViewModel(){
 
 
     private fun getNextWord() {
-        currentWord = allWordsList.random()
         val tempWord = currentWord.toCharArray()
         var i = 1
 
@@ -134,16 +136,27 @@ class GameViewModel : ViewModel(){
 
     }
 
-    private fun getPOIList() {
+    private fun getPOIList(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("ViewModel Launch", "prima del metadata")
-            val metadata = RemoteApi.apiService.getMetadata(100)
+            val metadata = RemoteApi.apiService.getMetadata(id)
             Log.d("ViewModel Launch", "dopo del metadata")
-            val result = metadata.res?.get(0)?.response?.get(0)
-            Log.d("ViewModel Launch", ""+ (result?.player?.name))
-            if (result != null) {
-                Log.d("ViewModel Launch", ""+ (result.player.name))
-            }
+            val result = metadata.enqueue(object : Callback<MyData> {
+                override fun onResponse(call: Call<MyData>, response: retrofit2.Response<MyData>) {
+                    val responseBody = response.body()!!.response[0]
+                    currentWord = responseBody.player.name
+                    for (myData in responseBody.transfers){
+                        _uriList.add(myData.teams.`in`.logo)
+                        _yearList.add(myData.date)
+                   }
+                    Log.d("onResponse", "currentWord: $currentWord, _uriList: $_uriList, _yearList: $_yearList")
+
+                }
+
+                override fun onFailure(call: Call<MyData>, t: Throwable) {
+                    Log.d("MyActivity", "onFailure: "+t.message)
+                }
+            })
 
         }
 
