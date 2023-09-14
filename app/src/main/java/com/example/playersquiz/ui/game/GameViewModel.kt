@@ -17,6 +17,7 @@ import retrofit2.Callback
 
 class GameViewModel : ViewModel(){
 
+    private lateinit var transfer: AdapterTransfer
     private lateinit var dataSource: List<Prova>
     private var _score = 0
     private lateinit var transfersList: MyData
@@ -48,9 +49,6 @@ class GameViewModel : ViewModel(){
         val id = generateRandomPLayerId()
         Log.d("generateRandomPLayerId()", "number id : $id")
         getPOIList(id)
-//        getNextWord()
-//        getNextSquad()
-//        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}")
     }
 
     private fun generateRandomPLayerId() : Long {
@@ -64,6 +62,7 @@ class GameViewModel : ViewModel(){
 
 
     private fun getNextWord() {
+        currentWord = transfer.getPlayerName()
         val tempWord = currentWord.toCharArray()
         var i = 1
 
@@ -80,19 +79,16 @@ class GameViewModel : ViewModel(){
             ++_currentWordCount
             wordsList.add(currentWord)
         }
-      //  _uriList.clear()
-      //  _yearList.clear()
-       // getNextSquad()
+        _uriList.clear()
+        _yearList.clear()
+        getNextSquad()
     }
 
     private fun getNextSquad(){
-
-        val adapterTransfer = AdapterTransfer(transfersList)
-
-
         //qui da fare le chiamate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
-        _uriList = adapterTransfer.getLogo()
-        _yearList = adapterTransfer.getDate()
+        _uriList = transfer.getLogo()
+        _yearList = transfer.getDate()
+        Log.d("GameFragment", "GameViewModel created! $yearList ,${uriList}, $currentWord")
     }
 
 
@@ -122,42 +118,22 @@ class GameViewModel : ViewModel(){
         } else false
     }
 
-    fun onLocationListRetrieved(list: List<Response>) {
-        Log.d("onLocationListRetrieved 2", list[0].player.name)
-        dataSource = list.map {
-            Prova(
-                player = it.player.name,
-                name = it.transfers[0].teams.`in`.name,
-                date = it.transfers[0].date,
-                logo = it.transfers[0].teams.`in`.logo
-            )
-        }
-
-
-    }
-
     private fun getPOIList(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("ViewModel Launch", "prima del metadata")
             val metadata = RemoteApi.apiService.getMetadata(id)
-            Log.d("ViewModel Launch", "dopo del metadata")
             val result = metadata.enqueue(object : Callback<MyData> {
                 override fun onResponse(call: Call<MyData>, response: retrofit2.Response<MyData>) {
-                    val responseBody = response.body()!!.response[0]
-                    currentWord = responseBody.player.name
-                    for (myData in responseBody.transfers){
-                        _uriList.add(myData.teams.`in`.logo)
-                        _yearList.add(myData.date)
-                   }
-                    Log.d("onResponse", "currentWord: $currentWord, _uriList: $_uriList, _yearList: $_yearList")
-
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()!!.response[0]
+                        transfer = AdapterTransfer(responseBody)
+                        getNextWord()
+                    }
                 }
 
                 override fun onFailure(call: Call<MyData>, t: Throwable) {
-                    Log.d("MyActivity", "onFailure: "+t.message)
+                    Log.d("GameViewModel", "onFailure: "+t.message)
                 }
             })
-
         }
 
     }

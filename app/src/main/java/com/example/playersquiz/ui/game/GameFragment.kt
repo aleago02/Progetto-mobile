@@ -12,6 +12,7 @@ import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.example.playersquiz.ui.game.adapters.Adapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.delay
 
 
 class GameFragment: Fragment() {
@@ -40,7 +41,6 @@ class GameFragment: Fragment() {
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
         // Update the UI
-
         updateNextImgOnScreen()
 //        updateNextWordOnScreen()
         updateScoreOnScreen()
