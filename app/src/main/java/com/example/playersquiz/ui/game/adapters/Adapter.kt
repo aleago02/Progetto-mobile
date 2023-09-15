@@ -26,7 +26,7 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
         return position.toLong()
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "ViewHolder", "InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
         val view = LayoutInflater.from(context).inflate(R.layout.squad_item, null)
@@ -35,7 +35,6 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
         val squadyearview: TextView = view.findViewById(R.id.year)
         val squadimgview: ImageView = view.findViewById(R.id.imageView)
 
-        Log.d("getView", "yearList : $yearList uriList $uriList ")
         //set data
         squadyearview.text = yearList[position]
 

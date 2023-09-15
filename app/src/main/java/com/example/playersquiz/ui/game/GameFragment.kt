@@ -8,11 +8,18 @@ import android.view.ViewGroup
 import android.widget.GridView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.playersquiz.MainActivity
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
+import com.example.playersquiz.remote.RemoteApi
+import com.example.playersquiz.remote.models.MyData
 import com.example.playersquiz.ui.game.adapters.Adapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
 
 
 class GameFragment: Fragment() {
@@ -21,6 +28,9 @@ class GameFragment: Fragment() {
     private lateinit var binding: GameFragmentBinding
     private lateinit var customAdapter: Adapter
     private lateinit var gridView: GridView
+    private var wordsList: MutableList<Int> = mutableListOf()
+    //loding
+    private lateinit var aLoding: ALoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,19 +46,38 @@ class GameFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
-        // Update the UI
+
+        apiCall()
+
+    }
+
+    private fun apiCall(){
+        //qui da inserire inizio caricamento
+        aLoding = ALoading(this.activity)
+        aLoding.startLoadingDialog()
+        val id = generateRandomPLayerId()
+        if (wordsList.contains(id.toInt())) {
+            apiCall()
+        }else {
+            wordsList.add(id.toInt())
+            Log.d("GameFragment", "generateRandomPLayerId: $id")
+            getPOIList(id)
+        }
+    }
+
+    private fun createAll(){
+        //qui fine caricamento
+        aLoding.dismissDialog()
         updateNextImgOnScreen()
-//        updateNextWordOnScreen()
+        updateNextWordOnScreen()
         updateScoreOnScreen()
 
     }
 
     private fun updateNextImgOnScreen() {
-        Log.d("updateNextImgOnScreen", "yearList : ${viewModel.yearList} uriList : ${viewModel.uriList}")
         customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
         gridView = binding.gridView.findViewById(R.id.gridView)
         gridView.adapter = customAdapter
@@ -60,9 +89,7 @@ class GameFragment: Fragment() {
         if (viewModel.isUserWordCorrect(playerWord)) {
             setErrorTextField(false)
             if (viewModel.nextWord()) {
-                updateNextWordOnScreen()
-                updateScoreOnScreen()
-                updateNextImgOnScreen()
+                apiCall()
             } else {
                 showFinalScoreDialog()
             }
@@ -74,9 +101,7 @@ class GameFragment: Fragment() {
     private fun onSkipWord() {
         if (viewModel.nextWord()) {
             setErrorTextField(false)
-            updateNextWordOnScreen()
-            updateScoreOnScreen()
-            updateNextImgOnScreen()
+            apiCall()
         } else {
             showFinalScoreDialog()
         }
@@ -107,9 +132,10 @@ class GameFragment: Fragment() {
     }
 
     private fun restartGame() {
+        wordsList.clear()
         viewModel.reinitializeData()
         setErrorTextField(false)
-        updateNextWordOnScreen()
+        apiCall()
     }
 
     private fun exitGame() {
@@ -122,15 +148,40 @@ class GameFragment: Fragment() {
     }
 
     private fun updateNextWordOnScreen() {
-        Log.d("updateNextWordOnScreen", " score: ${viewModel.currentScrambledWord}")
         binding.textViewUnscrambledWord.text = viewModel.currentScrambledWord
     }
 
     private fun updateScoreOnScreen(){
-        Log.d("updateScoreOnScreen", " score: ${viewModel.score}")
         binding.score.text = getString(R.string.score, viewModel.score)
         binding.wordCount.text = getString(
             R.string.word_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
+    }
+
+    private fun generateRandomPLayerId() : Long {
+        return (1..200015).random().toLong()
+    }
+
+    private fun getPOIList(id: Long) {
+        MainScope().launch(Dispatchers.IO) {
+            val metadata = RemoteApi.apiService.getMetadata(id)
+            val result = metadata.enqueue(object : Callback<MyData> {
+                override fun onResponse(call: Call<MyData>, response: retrofit2.Response<MyData>) {
+                    if (response.isSuccessful) {
+                        Log.d("GameFragment", "responseBody"+response.body())
+                        val responseBody = response.body()!!.response[0]
+                        viewModel.setting(responseBody)
+                        Log.d("GameFragment", "onResponse")
+                        createAll()
+                    }
+                }
+
+                override fun onFailure(call: Call<MyData>, t: Throwable) {
+                    Log.d("GameViewModel", "onFailure: "+t.message)
+                }
+
+            })
+        }
+
     }
 
 }
