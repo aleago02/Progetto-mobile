@@ -1,14 +1,10 @@
 package com.example.playersquiz.ui.game.adapters
 
 
-import com.example.playersquiz.remote.models.Response
+import com.example.playersquiz.remote.models.transfer.Response
 
 
 class AdapterTransfer(private val response: Response) {
-
-   fun getPlayerName(): String{
-        return response.player.name
-   }
 
     fun getLogo():MutableList<String> {
         val logoList: MutableList<String> = mutableListOf()

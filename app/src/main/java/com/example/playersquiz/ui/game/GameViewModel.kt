@@ -3,12 +3,13 @@ package com.example.playersquiz.ui.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.playersquiz.ui.game.adapters.AdapterTransfer
-import com.example.playersquiz.remote.models.Response
+import com.example.playersquiz.remote.models.transfer.Response
 
 
 class GameViewModel : ViewModel(){
 
     private lateinit var transfer: AdapterTransfer
+    private lateinit var name: String
     private var _score = 0
     val score: Int
         get() = _score
@@ -39,15 +40,17 @@ class GameViewModel : ViewModel(){
 
 
     private fun getNextWord() {
-        currentWord = transfer.getPlayerName()
+        currentWord = name
         val tempWord = currentWord.toCharArray()
         var i = 1
 
         while (i+1 < tempWord.size){
+            if(tempWord[i] == ' '){
 
-            tempWord[i] = '-'
+            }else{
+                tempWord[i] = '-'
+            }
             i += 1
-
         }
         _currentScrambledWord = String(tempWord)
         ++_currentWordCount
@@ -85,8 +88,9 @@ class GameViewModel : ViewModel(){
         return _currentWordCount < MAX_NO_OF_WORDS
     }
 
-    fun setting(responseBody: Response){
+    fun setting(responseBody: Response, name: String){
         transfer = AdapterTransfer(responseBody)
+        this.name = name
         getNextWord()
     }
 }
