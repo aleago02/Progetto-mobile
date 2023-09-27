@@ -7,8 +7,8 @@
     tools:context=".NbaMainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/game_fragment"
-        android:name="com.example.playersquiz.ui.game.GameFragment"
+        android:id="@+id/nba_fragment"
+        android:name="com.example.playersquiz.ui.game.NbaFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"

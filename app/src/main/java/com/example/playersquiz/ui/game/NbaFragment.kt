@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
-import com.example.playersquiz.databinding.GameFragmentBinding
+import com.example.playersquiz.databinding.NbaFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
-import com.example.playersquiz.remote.models.transfer.MyData
+import com.example.playersquiz.remote.models.playernba.Data
 import com.example.playersquiz.ui.game.adapters.Adapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +18,12 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 
 class NbaFragment: Fragment() {
-/*    private val viewModel: GameViewModel by viewModels()
+    private val viewModel: GameNbaViewModel by viewModels()
     // Binding object instance with access to the views in the game_fragment.xml layout
-    private lateinit var binding: GameFragmentBinding
+    private lateinit var binding: NbaFragmentBinding
     private lateinit var customAdapter: Adapter
     private var wordsList: MutableList<Int> = mutableListOf()
     //loding
@@ -35,7 +36,8 @@ class NbaFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout XML file and return a binding object instance
-        binding = GameFragmentBinding.inflate(inflater, container, false)
+        binding = NbaFragmentBinding.inflate(inflater, container, false)
+        apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
         return binding.root
     }
@@ -48,36 +50,35 @@ class NbaFragment: Fragment() {
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
 
-        apiCall()
-
     }
 
     private fun apiCall(){
         //qui da inserire inizio caricamento
         aLoding = ALoading(this.activity)
         aLoding.startLoadingDialog()
-        val page = generateRandomPage()
-        if (wordsList.contains(page)) {
+        val id = generateRandomPage()
+        if (wordsList.contains(id)) {
             apiCall()
         }else {
-            wordsList.add(page)
-            Log.d("GameFragment", "generateRandomPLayerId: $page")
-            getPOIList(page)
+            wordsList.add(id)
+            Log.d("GameFragment", "generateRandomPLayerId: $id")
+            getPOIList(id)
         }
     }
 
     private fun createAll(){
         //qui fine caricamento
         aLoding.dismissDialog()
-        updateNextImgOnScreen()
+        updateNextStats()
         updateNextWordOnScreen()
         updateScoreOnScreen()
 
     }
 
-    private fun updateNextImgOnScreen() {
-        customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
-
+    private fun updateNextStats() {
+        binding.txtsquad.text = viewModel.squad
+        binding.txtAlt.text = viewModel.altezza
+        binding.txtPos.text = viewModel.position
     }
 
     private fun onSubmitWord() {
@@ -151,34 +152,40 @@ class NbaFragment: Fragment() {
     private fun updateScoreOnScreen(){
         binding.score.text = getString(R.string.score, viewModel.score)
         binding.wordCount.text = getString(
-            R.string.word_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
+            R.string.player_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
     }
 
     private fun generateRandomPage() : Int {
-        return (1..45).random()
+        return (1..3092).random()
     }
 
-    private fun getPOIList(page: Int) {
+    private fun getPOIList(id: Int) {
         MainScope().launch(Dispatchers.IO) {
-            val metadata = RemoteApi.apiService.getPlayers(league, season, page)
-            val result = metadata.enqueue(object : Callback<MyData> {
-                override fun onResponse(call: Call<MyData>, response: retrofit2.Response<MyData>) {
+            val metadata = RemoteApi.apiNbaService.getPlayers(id)
+            val result = metadata.enqueue(object : Callback<Data?> {
+                override fun onResponse(call: Call<Data?>, response: Response<Data?>) {
                     if (response.isSuccessful) {
                         Log.d("GameFragment", "responseBody"+response.body())
-                        val responseBody = response.body()!!.response[0]
-                        viewModel.setting(responseBody)
-                        Log.d("GameFragment", "onResponse")
-                        createAll()
+                        if(response.body()!!.height_feet == null || response.body()!!.height_inches == null || response.body()!!.position == ""){
+                            aLoding.dismissDialog()
+                            apiCall()
+                        }else{
+                            val responseBody = response.body()!!
+                            val name = responseBody.first_name + " " + responseBody.last_name
+                            viewModel.setting(responseBody, name)
+                            Log.d("GameFragment", "onResponse")
+                            createAll()
+                        }
+
                     }
                 }
 
-                override fun onFailure(call: Call<MyData>, t: Throwable) {
+                override fun onFailure(call: Call<Data?>, t: Throwable) {
                     Log.d("GameViewModel", "onFailure: "+t.message)
                 }
-
             })
         }
 
     }
-*/
+
 }

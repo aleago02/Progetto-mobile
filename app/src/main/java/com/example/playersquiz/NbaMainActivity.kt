@@ -8,7 +8,7 @@ class NbaMainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.footballmain_activity)
+        setContentView(R.layout.nbamain_activity)
         Log.d("NbaMainActivity", "NbaMainActivity created!")
 
     }
