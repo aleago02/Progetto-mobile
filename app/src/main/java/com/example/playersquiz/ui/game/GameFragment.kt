@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.GridView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
@@ -104,14 +105,23 @@ class GameFragment: Fragment() {
     }
 
     private fun onSkipWord() {
-        if (viewModel.nextWord()) {
-            setErrorTextField(false)
-            apiCall()
-        } else {
-            showFinalScoreDialog()
-        }
+        showWord()
     }
 
+    private fun showWord() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Player : "+ viewModel.currentWord)
+            .setCancelable(false)
+            .setPositiveButton("Go on") { _, _ ->
+                if (viewModel.nextWord()) {
+                    setErrorTextField(false)
+                    apiCall()
+                } else {
+                    showFinalScoreDialog()
+                }
+            }
+            .show()
+    }
     private fun showFinalScoreDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.congratulations))
@@ -192,6 +202,7 @@ class GameFragment: Fragment() {
                                         viewModel.setting(response.body()!!.response[0], name)
                                         createAll()
                                         Log.d("GameFragment", "onResponse2")
+                                        aLoding.dismissDialog()
                                     }else{
                                         aLoding.dismissDialog()
                                         apiCall()

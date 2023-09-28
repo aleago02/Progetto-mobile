@@ -9,7 +9,6 @@ import com.example.playersquiz.remote.models.transfer.Response
 class GameViewModel : ViewModel(){
 
     private lateinit var transfer: AdapterTransfer
-    private lateinit var name: String
     private var _score = 0
     val score: Int
         get() = _score
@@ -22,7 +21,9 @@ class GameViewModel : ViewModel(){
     val currentScrambledWord: String
         get() = _currentScrambledWord
 
-    private lateinit var currentWord: String
+    private lateinit var _currentWord: String
+    val currentWord: String
+        get() = _currentWord
 
     private var _uriList: MutableList<String> = mutableListOf()
     private var _yearList: MutableList<String> = mutableListOf()
@@ -40,8 +41,7 @@ class GameViewModel : ViewModel(){
 
 
     private fun getNextWord() {
-        currentWord = name
-        val tempWord = currentWord.toCharArray()
+        val tempWord = _currentWord.toCharArray()
         var i = 1
 
         while (i+1 < tempWord.size){
@@ -63,7 +63,7 @@ class GameViewModel : ViewModel(){
         //qui da fare le chiamate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
         _uriList = transfer.getLogo()
         _yearList = transfer.getDate()
-        Log.d("GameViewModel", "GameViewModel created! $yearList ,${uriList}, $currentWord")
+        Log.d("GameViewModel", "GameViewModel created! $yearList ,${uriList}, $_currentWord")
     }
 
 
@@ -90,7 +90,7 @@ class GameViewModel : ViewModel(){
 
     fun setting(responseBody: Response, name: String){
         transfer = AdapterTransfer(responseBody)
-        this.name = name
+        _currentWord = name
         getNextWord()
     }
 }

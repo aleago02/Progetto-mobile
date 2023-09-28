@@ -6,7 +6,6 @@ import com.example.playersquiz.remote.models.playernba.Data
 
 class GameNbaViewModel : ViewModel(){
 
-    private lateinit var name: String
     private var _score = 0
     val score: Int
         get() = _score
@@ -19,7 +18,9 @@ class GameNbaViewModel : ViewModel(){
     val currentScrambledWord: String
         get() = _currentScrambledWord
 
-    private lateinit var currentWord: String
+    private lateinit var _currentWord: String
+    val currentWord: String
+        get() = _currentWord
 
     private lateinit var _squad: String
     private lateinit var _position: String
@@ -41,8 +42,7 @@ class GameNbaViewModel : ViewModel(){
 
 
     private fun getNextWord() {
-        currentWord = name
-        val tempWord = currentWord.toCharArray()
+        val tempWord = _currentWord.toCharArray()
         var i = 1
 
         while (i+1 < tempWord.size){
@@ -55,7 +55,7 @@ class GameNbaViewModel : ViewModel(){
         }
         _currentScrambledWord = String(tempWord)
         ++_currentWordCount
-        Log.d("GameViewModel", "GameViewModel created! $_altezza ,$_squad, $_position, $currentWord")
+        Log.d("GameViewModel", "GameViewModel created! $_altezza ,$_squad, $_position, $_currentWord")
     }
 
     fun reinitializeData() {
@@ -83,7 +83,7 @@ class GameNbaViewModel : ViewModel(){
         _altezza = responseBody.height_feet.toString() + " ft " + responseBody.height_inches.toString() + " in"
         _squad = responseBody.team.name
         _position = responseBody.position.toString()
-        this.name = name
+        _currentWord = name
         getNextWord()
     }
 }

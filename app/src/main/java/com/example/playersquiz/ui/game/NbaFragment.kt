@@ -37,6 +37,7 @@ class NbaFragment: Fragment() {
     ): View {
         // Inflate the layout XML file and return a binding object instance
         binding = NbaFragmentBinding.inflate(inflater, container, false)
+        aLoding = ALoading(this.activity)
         apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
         return binding.root
@@ -54,7 +55,6 @@ class NbaFragment: Fragment() {
 
     private fun apiCall(){
         //qui da inserire inizio caricamento
-        aLoding = ALoading(this.activity)
         aLoding.startLoadingDialog()
         val id = generateRandomPage()
         if (wordsList.contains(id)) {
@@ -97,12 +97,22 @@ class NbaFragment: Fragment() {
     }
 
     private fun onSkipWord() {
-        if (viewModel.nextWord()) {
-            setErrorTextField(false)
-            apiCall()
-        } else {
-            showFinalScoreDialog()
-        }
+        showWord()
+    }
+
+    private fun showWord() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Player : "+ viewModel.currentWord)
+            .setCancelable(false)
+            .setPositiveButton("Go on") { _, _ ->
+                if (viewModel.nextWord()) {
+                    setErrorTextField(false)
+                    apiCall()
+                } else {
+                    showFinalScoreDialog()
+                }
+            }
+            .show()
     }
 
     private fun showFinalScoreDialog() {

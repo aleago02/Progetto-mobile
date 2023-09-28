@@ -16,7 +16,6 @@
 
 <resources>
     <string name="app_name">Players Quiz</string>
-    <string name="instructions">Unscramble the word using all the letters.</string>
     <string name="skip">Skip</string>
     <string name="submit">Submit</string>
     <string name="score">Score: %d</string>
