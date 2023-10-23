@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    Credo sia meglio cambiare ScrollView.
+    Cambiate tutti i valori delle spaziature come avete fatto a riga 18, salvando in @dimen,
+    stessa cosa con le stringhe in @string
+-->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
