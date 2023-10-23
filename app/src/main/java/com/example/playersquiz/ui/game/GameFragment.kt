@@ -36,7 +36,16 @@ class GameFragment: Fragment() {
     private lateinit var aLoding: ALoading
 
 
-
+/*
+    Quando inizializzi il binding non hai più bisogno di usare findviewbyid,
+    se usi quello non hai bisogno del binding, fanno la stessa cosa: ottenere un riferimento ad un elemento della UI.
+    Se fai binding.idElementoDelFileXml hai già un riferimento diretto senza bisogno di assegnarlo a una variabile:
+    in onViewCreated() l'avete usato bene mentre l'utilizzo in updateNextImgOnScreen() non ha senso dal momento che usi binding;
+    da quel che so che binding è meglio ma non so il prof cosa preferisca.
+    Esempio di come usare binding in updateNextImgOnScreen():
+    customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
+    binding.gridView.adapter = customAdapter
+*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

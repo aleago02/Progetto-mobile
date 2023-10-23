@@ -75,12 +75,19 @@ class NbaFragment: Fragment() {
 
     }
 
+    /*Se vuoi -> binding.txtsquad.setText(viewModel.squad)*/
     private fun updateNextStats() {
         binding.txtsquad.text = viewModel.squad
         binding.txtAlt.text = viewModel.altezza
         binding.txtPos.text = viewModel.position
     }
 
+    /*
+        Qua usate this.binding.textInputEditText.addTextChangedListener(new TextWatcher() {})
+        Fate @Override dei metodi è fatto apposta per i campi in cui va controllato il codice
+        Così potete gestire vari aspetti in momenti diversi della scrittura,
+        come che quando uno sbaglia sarebbe bello gli svuotaste l'inputText
+    */
     private fun onSubmitWord() {
         val playerWord = binding.textInputEditText.text.toString()
 
