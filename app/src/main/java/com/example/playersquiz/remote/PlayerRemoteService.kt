@@ -1,12 +1,7 @@
 package com.example.playersquiz.remote
-/*
-    Questa deve essere un'interfaccia che viene poi implementata
-    da un file a parte, che poi richiami nel fragment come ora richiamate sto file.
-    Il file a parte conterrà praticamente quello che adesso avete
-    per esempio in GameFragment.kt da riga 192 in poi, le funzioni di chiamata.
-    Nel fragment(controller) si fa l'assegnazione dei dati presi dai repository e api(models)
-    agli elementi degli xml(view), non si fanno le chiamate ai dati
-*/
+
+
+
 import com.example.playersquiz.remote.models.players.Players
 import com.example.playersquiz.remote.models.transfer.MyData
 import retrofit2.Call
