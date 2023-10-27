@@ -12,6 +12,10 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.playersquiz.R
 
+/*
+Anche qua ricordatevi o binding o findviewbyid, coerenti in tutto il progetto
+*/
+
 class Adapter(private val uriList: MutableList<String>, private val yearList: MutableList<String>, private val context: Context) : BaseAdapter() {
 
     override fun getCount(): Int {
