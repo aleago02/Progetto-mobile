@@ -25,32 +25,18 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class GameFragment: Fragment() {
+class
+GameFragment: Fragment() {
     private val viewModel: GameViewModel by viewModels()
-    // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: GameFragmentBinding
     private lateinit var customAdapter: Adapter
-    private lateinit var gridView: GridView
     private var wordsList: MutableList<Int> = mutableListOf()
-    //loding
     private lateinit var aLoding: ALoading
 
-
-/*
-    Quando inizializzi il binding non hai più bisogno di usare findviewbyid,
-    se usi quello non hai bisogno del binding, fanno la stessa cosa: ottenere un riferimento ad un elemento della UI.
-    Se fai binding.idElementoDelFileXml hai già un riferimento diretto senza bisogno di assegnarlo a una variabile:
-    in onViewCreated() l'avete usato bene mentre l'utilizzo in updateNextImgOnScreen() non ha senso dal momento che usi binding;
-    da quel che so che binding è meglio ma non so il prof cosa preferisca.
-    Esempio di come usare binding in updateNextImgOnScreen():
-    customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
-    binding.gridView.adapter = customAdapter
-*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout XML file and return a binding object instance
         binding = GameFragmentBinding.inflate(inflater, container, false)
         apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
@@ -60,12 +46,8 @@ class GameFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
-
-
     }
 
     private fun apiCall(){
@@ -89,13 +71,11 @@ class GameFragment: Fragment() {
         updateNextImgOnScreen()
         updateNextWordOnScreen()
         updateScoreOnScreen()
-
     }
 
     private fun updateNextImgOnScreen() {
         customAdapter = Adapter(viewModel.uriList, viewModel.yearList, context = requireContext().applicationContext)
-        gridView = binding.gridView.findViewById(R.id.gridView)
-        gridView.adapter = customAdapter
+        binding.gridView.adapter = customAdapter
     }
 
     private fun onSubmitWord() {
@@ -198,7 +178,7 @@ class GameFragment: Fragment() {
                     if (response.isSuccessful) {
                         Log.d("GameFragment", "responseBody"+response.body())
                         val responseBody = response.body()!!.response[resp]
-                        val name = responseBody.player.firstname + " " + responseBody.player.lastname
+                        val name = responseBody.player.lastname //+ " " + responseBody.player.firstname
                         val meta = RemoteApi.apiService.getTransfer(responseBody.player.id.toLong())
                         val respo = meta.enqueue(object : Callback<MyData?> {
                             override fun onResponse(

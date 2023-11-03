@@ -188,7 +188,7 @@ class NbaFragment: Fragment() {
                             apiCall()
                         }else{
                             val responseBody = response.body()!!
-                            val name = responseBody.first_name + " " + responseBody.last_name
+                            val name = responseBody.last_name //+ " " + responseBody.first_name
                             viewModel.setting(responseBody, name)
                             Log.d("GameFragment", "onResponse")
                             createAll()

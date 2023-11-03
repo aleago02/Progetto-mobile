@@ -79,7 +79,7 @@ class GameNbaViewModel : ViewModel(){
         return _currentWordCount < MAX_NO_OF_WORDS
     }
 
-    fun setting(responseBody: Data, name: String){
+    fun setting(responseBody: Data, name: String?){
         _altezza = responseBody.height_feet.toString() + " ft " + responseBody.height_inches.toString() + " in"
         _squad = responseBody.team.name
         _position = responseBody.position.toString()
