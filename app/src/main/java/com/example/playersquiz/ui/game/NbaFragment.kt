@@ -22,11 +22,8 @@ import retrofit2.Response
 
 class NbaFragment: Fragment() {
     private val viewModel: GameNbaViewModel by viewModels()
-    // Binding object instance with access to the views in the game_fragment.xml layout
     private lateinit var binding: NbaFragmentBinding
-    private lateinit var customAdapter: Adapter
     private var wordsList: MutableList<Int> = mutableListOf()
-    //loding
     private lateinit var aLoding: ALoading
 
 
@@ -35,7 +32,6 @@ class NbaFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout XML file and return a binding object instance
         binding = NbaFragmentBinding.inflate(inflater, container, false)
         aLoding = ALoading(this.activity)
         apiCall()
@@ -74,20 +70,12 @@ class NbaFragment: Fragment() {
         updateScoreOnScreen()
 
     }
-
-    /*Se vuoi -> binding.txtsquad.setText(viewModel.squad)*/
     private fun updateNextStats() {
         binding.txtsquad.text = viewModel.squad
         binding.txtAlt.text = viewModel.altezza
         binding.txtPos.text = viewModel.position
     }
 
-    /*
-        Qua usate this.binding.textInputEditText.addTextChangedListener(new TextWatcher() {})
-        Fate @Override dei metodi è fatto apposta per i campi in cui va controllato il codice
-        Così potete gestire vari aspetti in momenti diversi della scrittura,
-        come che quando uno sbaglia sarebbe bello gli svuotaste l'inputText
-    */
     private fun onSubmitWord() {
         val playerWord = binding.textInputEditText.text.toString()
 
@@ -193,7 +181,6 @@ class NbaFragment: Fragment() {
                             Log.d("GameFragment", "onResponse")
                             createAll()
                         }
-
                     }
                 }
 
@@ -202,7 +189,5 @@ class NbaFragment: Fragment() {
                 }
             })
         }
-
     }
-
 }

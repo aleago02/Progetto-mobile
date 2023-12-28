@@ -6,10 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
@@ -31,7 +29,7 @@ GameFragment: Fragment() {
     private lateinit var binding: GameFragmentBinding
     private lateinit var customAdapter: Adapter
     private var wordsList: MutableList<Int> = mutableListOf()
-    private lateinit var aLoding: ALoading
+    private lateinit var aLoading: ALoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,8 +51,8 @@ GameFragment: Fragment() {
     private fun apiCall(){
         //qui da inserire inizio caricamento
         Log.d("GameFragment" ,  "apicall")
-        aLoding = ALoading(this.activity)
-        aLoding.startLoadingDialog()
+        aLoading = ALoading(this.activity)
+        aLoading.startLoadingDialog()
         val page = generateRandomPage()
         if (wordsList.contains(page)) {
             apiCall()
@@ -67,7 +65,7 @@ GameFragment: Fragment() {
 
     private fun createAll(){
         //qui fine caricamento
-        aLoding.dismissDialog()
+        aLoading.dismissDialog()
         updateNextImgOnScreen()
         updateNextWordOnScreen()
         updateScoreOnScreen()
@@ -191,9 +189,9 @@ GameFragment: Fragment() {
                                         viewModel.setting(response.body()!!.response[0], name)
                                         createAll()
                                         Log.d("GameFragment", "onResponse2")
-                                        aLoding.dismissDialog()
+                                        aLoading.dismissDialog()
                                     }else{
-                                        aLoding.dismissDialog()
+                                        aLoading.dismissDialog()
                                         apiCall()
                                     }
                                 }
@@ -203,18 +201,13 @@ GameFragment: Fragment() {
                                 Log.d("GameFragment", "onFailure: "+t.message)
                             }
                         })
-
-
                     }
                 }
 
                 override fun onFailure(call: Call<Players>, t: Throwable) {
                     Log.d("GameFragment", "onFailure: "+t.message)
                 }
-
             })
         }
-
     }
-
 }

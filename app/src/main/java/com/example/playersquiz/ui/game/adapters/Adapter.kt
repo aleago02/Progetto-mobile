@@ -2,21 +2,17 @@ package com.example.playersquiz.ui.game.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.playersquiz.R
-
-/*
-Anche qua ricordatevi o binding o findviewbyid, coerenti in tutto il progetto
-*/
+import com.example.playersquiz.databinding.SquadItemBinding
 
 class Adapter(private val uriList: MutableList<String>, private val yearList: MutableList<String>, private val context: Context) : BaseAdapter() {
+
+    private lateinit var binding: SquadItemBinding
 
     override fun getCount(): Int {
         return yearList.size
@@ -33,21 +29,17 @@ class Adapter(private val uriList: MutableList<String>, private val yearList: Mu
     @SuppressLint("CheckResult", "ViewHolder", "InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val view = LayoutInflater.from(context).inflate(R.layout.squad_item, null)
-
-        //find view
-        val squadyearview: TextView = view.findViewById(R.id.year)
-        val squadimgview: ImageView = view.findViewById(R.id.imageView)
+        binding = SquadItemBinding.inflate(LayoutInflater.from(context), parent, false)
 
         //set data
-        squadyearview.text = yearList[position]
+        binding.year.text = yearList[position]
 
         //set Image
         Glide.with(context)
             .load(uriList[position])
-            .into(squadimgview)
+            .into(binding.imageView)
 
-        return view
+        return binding.root
     }
 
 }

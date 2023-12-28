@@ -3,7 +3,6 @@ package com.example.playersquiz.ui.game.adapters
 
 import com.example.playersquiz.remote.models.transfer.Response
 
-
 class AdapterTransfer(private val response: Response) {
 
     fun getLogo():MutableList<String> {

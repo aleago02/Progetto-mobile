@@ -9,8 +9,8 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nba_fragment"
         android:name="com.example.playersquiz.ui.game.NbaFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/layout_0dp"
+        android:layout_height="@dimen/layout_0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

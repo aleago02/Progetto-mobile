@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    Stringhe in @string, dimensioni in @dimen
--->
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,8 +11,8 @@
         android:id="@+id/buttonFootball"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="112dp"
-        android:text="Football Game"
+        android:layout_marginBottom="@dimen/margin_112dp"
+        android:text="@string/football"
         app:layout_constraintBottom_toTopOf="@+id/buttonNba"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -24,10 +20,10 @@
 
     <Button
         android:id="@+id/buttonNba"
-        android:layout_width="158dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="124dp"
-        android:text="NBA Game"
+        android:layout_width="@dimen/layout_158dp"
+        android:layout_height="@dimen/layout_45dp"
+        android:layout_marginBottom="@dimen/margin_124dp"
+        android:text="@string/nba"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -35,12 +31,12 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="260dp"
-        android:layout_height="138dp"
-        android:layout_marginTop="4dp"
-        android:text="GUESS PLAYER"
+        android:layout_width="@dimen/layout_260dp"
+        android:layout_height="@dimen/layout_138dp"
+        android:layout_marginTop="@dimen/margin_4dp"
+        android:text="@string/guess"
         android:textAlignment="center"
-        android:textSize="50dp"
+        android:textSize="@dimen/txt_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/buttonFootball"
         app:layout_constraintEnd_toEndOf="parent"
