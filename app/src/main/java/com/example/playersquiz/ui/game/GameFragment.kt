@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.Normalizer
 
 
 class
@@ -79,7 +80,7 @@ GameFragment: Fragment() {
     private fun onSubmitWord() {
         val playerWord = binding.textInputEditText.text.toString()
 
-        if (viewModel.isUserWordCorrect(playerWord)) {
+        if (isNormalizedUsersWordCorrect(playerWord)) {
             setErrorTextField(false)
             if (viewModel.nextWord()) {
                 apiCall()
@@ -87,10 +88,20 @@ GameFragment: Fragment() {
                 showFinalScoreDialog()
             }
         } else {
-            setErrorTextField(true)
+                setErrorTextField(true)
+            }
         }
+
+    private fun isNormalizedUsersWordCorrect(userWord: String): Boolean {
+        val normalizedUserWord = normalizeString(userWord)
+        val normalizedCurrentWord = normalizeString(viewModel.currentWord)
+        return normalizedUserWord.equals(normalizedCurrentWord, ignoreCase = true)
     }
 
+    private fun normalizeString(input: String): String {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+            .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
+    }
     private fun onSkipWord() {
         showWord()
     }

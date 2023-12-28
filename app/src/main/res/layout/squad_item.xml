@@ -9,8 +9,8 @@
             android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="@dimen/layout_100dp"
-                    android:layout_height="@dimen/layout_100dp"
+                    android:layout_width="@dimen/layout_80dp"
+                    android:layout_height="@dimen/layout_80dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true" />
 
