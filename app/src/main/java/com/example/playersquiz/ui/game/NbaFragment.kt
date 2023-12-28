@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.Normalizer
 
 class NbaFragment: Fragment() {
     private val viewModel: GameNbaViewModel by viewModels()
@@ -79,7 +80,9 @@ class NbaFragment: Fragment() {
     private fun onSubmitWord() {
         val playerWord = binding.textInputEditText.text.toString()
 
-        if (viewModel.isUserWordCorrect(playerWord)) {
+        Log.d("Debug", "User input: $playerWord")
+
+        if (isNormalizedUsersWordCorrect(playerWord)) {
             setErrorTextField(false)
             if (viewModel.nextWord()) {
                 apiCall()
@@ -89,6 +92,26 @@ class NbaFragment: Fragment() {
         } else {
             setErrorTextField(true)
         }
+    }
+
+    private fun isNormalizedUsersWordCorrect(userWord: String): Boolean {
+        val normalizedUserWord = normalizeString(userWord)
+        val normalizedCurrentWord = normalizeString(viewModel.currentWord)
+
+        // Stampa di debug
+        Log.d("Debug", "Normalized user word: $normalizedUserWord")
+        Log.d("Debug", "Normalized current word: $normalizedCurrentWord")
+
+        return normalizedUserWord.equals(normalizedCurrentWord, ignoreCase = true)
+    }
+
+    private fun normalizeString(input: String): String {
+        val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
+            .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
+
+        Log.d("Debug", "After normalization: $normalized")
+
+        return normalized
     }
 
     private fun onSkipWord() {
