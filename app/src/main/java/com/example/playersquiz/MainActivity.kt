@@ -19,20 +19,15 @@ class MainActivity: AppCompatActivity() {
         Log.d("MainActivity", "MainActivity created!")
 
         val buttonFootball = findViewById<Button>(R.id.buttonFootball)
-        buttonFootball.setOnClickListener{
+        buttonFootball.setOnClickListener {
             val intent = Intent(this, FootballMainActivity::class.java)
             startActivity(intent)
         }
-/*
-        binding.buttonFootball.setOnClickListener{
-            val intent = Intent(this, FootballMainActivity::class.java)
-            startActivity(intent)
-        }*/
 
-        binding.buttonNba.setOnClickListener{
+        val buttunNba = findViewById<Button>(R.id.buttonNba)
+        buttunNba.setOnClickListener{
             val intent = Intent(this, NbaMainActivity::class.java)
             startActivity(intent)
         }
-
     }
 }
