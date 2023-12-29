@@ -63,16 +63,8 @@ class GameNbaViewModel : ViewModel(){
         _currentWordCount = 0
     }
 
-    private fun increaseScore() {
+    fun increaseScore() {
         _score += SCORE_INCREASE
-    }
-
-    fun isUserWordCorrect(playerWord: String): Boolean {
-        if (playerWord.equals(currentWord, true)) {
-            increaseScore()
-            return true
-        }
-        return false
     }
 
     fun nextWord(): Boolean {

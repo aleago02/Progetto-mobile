@@ -60,7 +60,6 @@ class GameViewModel : ViewModel(){
     }
 
     private fun getNextSquad(){
-        //qui da fare le chiamate per aggionare le variabili _uriList(URL delle squadre) e _yearList(anni di trasferta)
         _uriList = transfer.getLogo()
         _yearList = transfer.getDate()
         Log.d("GameViewModel", "GameViewModel created! $yearList ,${uriList}, $_currentWord")
@@ -72,16 +71,9 @@ class GameViewModel : ViewModel(){
         _currentWordCount = 0
     }
 
-    private fun increaseScore() {
+    fun increaseScore() {
         _score += SCORE_INCREASE
-    }
-
-    fun isUserWordCorrect(playerWord: String): Boolean {
-        if (playerWord.equals(currentWord, true)) {
-            increaseScore()
-            return true
-        }
-        return false
+        Log.d("GameViewModel", "Score increased! New score: $_score")
     }
 
     fun nextWord(): Boolean {

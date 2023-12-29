@@ -32,13 +32,15 @@ GameFragment: Fragment() {
     private var wordsList: MutableList<Int> = mutableListOf()
     private lateinit var aLoading: ALoading
 
+    private var isGameInitialized = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = GameFragmentBinding.inflate(inflater, container, false)
-        apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
+        initializeGame()
         return binding.root
     }
 
@@ -47,6 +49,13 @@ GameFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
+    }
+
+    private fun initializeGame() {
+        if (!isGameInitialized) {
+            apiCall()
+            isGameInitialized = true
+        }
     }
 
     private fun apiCall(){
@@ -84,6 +93,7 @@ GameFragment: Fragment() {
 
         if (isNormalizedUsersWordCorrect(playerWord)) {
             setErrorTextField(false)
+            viewModel.increaseScore()
             if (viewModel.nextWord()) {
                 apiCall()
             } else {
@@ -131,6 +141,8 @@ GameFragment: Fragment() {
             }
             .show()
     }
+
+
     private fun showFinalScoreDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.congratulations))
@@ -176,6 +188,7 @@ GameFragment: Fragment() {
     }
 
     private fun updateScoreOnScreen(){
+        Log.d("GameFragment", "Updating score: ${viewModel.score}")
         binding.score.text = getString(R.string.score, viewModel.score)
         binding.wordCount.text = getString(
             R.string.player_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)

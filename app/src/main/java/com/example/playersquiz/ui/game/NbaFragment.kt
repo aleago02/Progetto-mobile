@@ -84,6 +84,7 @@ class NbaFragment: Fragment() {
 
         if (isNormalizedUsersWordCorrect(playerWord)) {
             setErrorTextField(false)
+            viewModel.increaseScore()
             if (viewModel.nextWord()) {
                 apiCall()
             } else {

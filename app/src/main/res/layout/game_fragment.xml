@@ -93,7 +93,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/score_twenty" />
+            tools:text="Score: 20" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField"
