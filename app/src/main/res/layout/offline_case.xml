@@ -1,0 +1,27 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/offlineLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/light_blue_200">
+
+    <ImageView
+        android:id="@+id/offlineMessageImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="50dp"
+        android:contentDescription="Offline Image"
+        android:src="@drawable/offline" />
+
+    <TextView
+        android:id="@+id/offlineMessageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/offline_message"
+        android:textStyle="bold"
+        android:textSize="@dimen/offline"
+        android:textColor="@color/black" />
+
+</LinearLayout>

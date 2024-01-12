@@ -1,6 +1,10 @@
 package com.example.playersquiz.ui.game
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
+import com.example.playersquiz.databinding.OfflineCaseBinding
 import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.players.Players
 import com.example.playersquiz.remote.models.transfer.MyData
@@ -34,6 +39,12 @@ GameFragment: Fragment() {
 
     private var isGameInitialized = false
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities((connectivityManager.activeNetwork))
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,22 +55,34 @@ GameFragment: Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
     }
 
+    private fun handleOfflineMode() {
+        val offlineLayout = binding.offlineLayout
+        val scrollView = binding.onlineLayout
+
+        if (isNetworkAvailable()) {
+            offlineLayout.visibility = View.GONE
+            scrollView.visibility = View.VISIBLE
+        } else {
+            offlineLayout.visibility = View.VISIBLE
+            scrollView.visibility = View.GONE
+        }
+    }
+
     private fun initializeGame() {
-        if (!isGameInitialized) {
+        if (isGameInitialized) {
+            handleOfflineMode()
             apiCall()
             isGameInitialized = true
         }
     }
 
     private fun apiCall(){
-        //qui da inserire inizio caricamento
         Log.d("GameFragment" ,  "apicall")
         aLoading = ALoading(this.activity)
         aLoading.startLoadingDialog()
