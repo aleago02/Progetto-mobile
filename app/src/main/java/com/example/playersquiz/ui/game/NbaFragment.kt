@@ -59,7 +59,6 @@ class NbaFragment: Fragment() {
     private fun handleOfflineMode() {
         val offlineLayout = binding.offlineLayout
         val scrollView = binding.onlineLayout
-        val tryAgainButton = binding.tryAgainButton
 
         if (isNetworkAvailable()) {
             offlineLayout.visibility = LinearLayout.GONE
