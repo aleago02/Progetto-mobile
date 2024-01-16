@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
@@ -192,7 +193,12 @@ class NbaFragment: Fragment() {
                 restartGame()
             }
             .show()
+        val cacheValue = cache.toIntOrNull()
+        if (cacheValue != null && viewModel.score > cacheValue) {
+            Toast.makeText(this.context, "New Record!!", Toast.LENGTH_SHORT).show()
+        }
     }
+    
 
     private fun setErrorTextField(error: Boolean) {
         if (error) {

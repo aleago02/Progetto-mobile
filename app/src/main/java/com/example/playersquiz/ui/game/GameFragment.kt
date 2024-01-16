@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
@@ -65,6 +66,7 @@ GameFragment: Fragment() {
         binding.skip.setOnClickListener { onSkipWord() }
         this.cache = cacheManager.readDataFromCache(cacheFileName)
         binding.record.text = getString(R.string.record, cache)
+        Log.d("klo", cache)
     }
 
     private fun handleOfflineMode() {
@@ -150,8 +152,8 @@ GameFragment: Fragment() {
         val normalizedCurrentWord = normalizeString(viewModel.currentWord)
 
         // Stampa di debug
-        Log.d("Debug", "Normalized user word: $normalizedUserWord")
-        Log.d("Debug", "Normalized current word: $normalizedCurrentWord")
+        Log.d("qw", "Normalized user word: $normalizedUserWord")
+        Log.d("qw", "Normalized current word: $normalizedCurrentWord")
 
         return normalizedUserWord.equals(normalizedCurrentWord, ignoreCase = true)
     }
@@ -160,7 +162,7 @@ GameFragment: Fragment() {
         val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
             .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
 
-        Log.d("Debug", "After normalization: $normalized")
+        Log.d("qw", "After normalization: $normalized")
 
         return normalized
     }
@@ -196,6 +198,10 @@ GameFragment: Fragment() {
                 restartGame()
             }
             .show()
+        val cacheValue = cache.toIntOrNull()
+        if (cacheValue != null && viewModel.score > cacheValue) {
+            Toast.makeText(this.context, "New Record!!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setErrorTextField(error: Boolean) {
