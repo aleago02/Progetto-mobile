@@ -14,6 +14,17 @@
         tools:context=".ui.game.GameFragment">
 
 
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/score_twenty" />
+
         <GridView
             android:id="@+id/gridView"
             android:layout_width="@dimen/gridview_layout_width"
@@ -85,15 +96,17 @@
             tools:text="@string/three_of_ten" />
 
         <TextView
-            android:id="@+id/score"
+            android:id="@+id/record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/score"
+            android:text="@string/record"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/score"
+            app:layout_constraintHorizontal_bias="0.545"
+            app:layout_constraintStart_toEndOf="@+id/word_count"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Score: 20" />
+            tools:text="@string/record_zero"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField"

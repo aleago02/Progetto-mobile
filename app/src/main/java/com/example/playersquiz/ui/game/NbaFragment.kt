@@ -1,5 +1,6 @@
 package com.example.playersquiz.ui.game
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.playersquiz.MyCacheManager
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.NbaFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.playernba.Data
-import com.example.playersquiz.ui.game.adapters.Adapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -26,8 +27,9 @@ class NbaFragment: Fragment() {
     private lateinit var binding: NbaFragmentBinding
     private var wordsList: MutableList<Int> = mutableListOf()
     private lateinit var aLoding: ALoading
-
-
+    private lateinit var cacheManager: MyCacheManager
+    private var cache: String = ""
+    private val cacheFileName = "nba"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,7 @@ class NbaFragment: Fragment() {
     ): View {
         binding = NbaFragmentBinding.inflate(inflater, container, false)
         aLoding = ALoading(this.activity)
+        cacheManager = MyCacheManager(requireContext())
         apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
         return binding.root
@@ -47,6 +50,8 @@ class NbaFragment: Fragment() {
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
+        this.cache = cacheManager.readDataFromCache(cacheFileName)
+        binding.record.text = getString(R.string.record, cache)
 
     }
 
@@ -180,6 +185,9 @@ class NbaFragment: Fragment() {
 
     private fun updateScoreOnScreen(){
         binding.score.text = getString(R.string.score, viewModel.score)
+        if (viewModel.score != null && cache.toIntOrNull() != null){
+            if (viewModel.score > cache.toIntOrNull()!!) cacheManager.saveDataToCache(viewModel.score.toString(), cacheFileName)
+        }
         binding.wordCount.text = getString(
             R.string.player_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
     }

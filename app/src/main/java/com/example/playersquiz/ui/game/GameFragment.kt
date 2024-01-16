@@ -6,8 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.playersquiz.MyCacheManager
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
@@ -31,8 +33,10 @@ GameFragment: Fragment() {
     private lateinit var customAdapter: Adapter
     private var wordsList: MutableList<Int> = mutableListOf()
     private lateinit var aLoading: ALoading
-
     private var isGameInitialized = false
+    private lateinit var cacheManager: MyCacheManager
+    private var cache: String = ""
+    private val cacheFileName = "footbal"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +44,7 @@ GameFragment: Fragment() {
     ): View {
         binding = GameFragmentBinding.inflate(inflater, container, false)
         Log.d("GameFragment", "GameFragment created/re-created!")
+        cacheManager = MyCacheManager(requireContext())
         initializeGame()
         return binding.root
     }
@@ -49,6 +54,8 @@ GameFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
+        this.cache = cacheManager.readDataFromCache(cacheFileName)
+        binding.record.text = getString(R.string.record, cache)
     }
 
     private fun initializeGame() {
@@ -190,6 +197,9 @@ GameFragment: Fragment() {
     private fun updateScoreOnScreen(){
         Log.d("GameFragment", "Updating score: ${viewModel.score}")
         binding.score.text = getString(R.string.score, viewModel.score)
+        if (viewModel.score != null && cache.toIntOrNull() != null){
+            if (viewModel.score > cache.toIntOrNull()!!) cacheManager.saveDataToCache(viewModel.score.toString(), cacheFileName)
+        }
         binding.wordCount.text = getString(
             R.string.player_count, viewModel.currentWordCount, MAX_NO_OF_WORDS)
     }

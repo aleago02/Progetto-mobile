@@ -13,6 +13,19 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/default_padding"
         tools:context=".ui.game.GameFragment">
+
+        <TextView
+            android:id="@+id/record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintEnd_toStartOf="@+id/score"
+            app:layout_constraintStart_toEndOf="@+id/word_count"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
