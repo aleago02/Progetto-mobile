@@ -26,4 +26,6 @@
     <string name="guess_information">guess player from information</string>
     <string name="year">year</string>
     <string name="offline_message">Nessuna connesione Internet</string>
+    <string name="OfflineImage">Offline Image</string>
+    <string name="tryAgain">Try Again</string>
 </resources>

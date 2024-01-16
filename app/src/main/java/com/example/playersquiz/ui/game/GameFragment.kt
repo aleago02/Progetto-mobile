@@ -4,17 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.playersquiz.R
 import com.example.playersquiz.databinding.GameFragmentBinding
-import com.example.playersquiz.databinding.OfflineCaseBinding
 import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.players.Players
 import com.example.playersquiz.remote.models.transfer.MyData
@@ -36,7 +36,6 @@ GameFragment: Fragment() {
     private lateinit var customAdapter: Adapter
     private var wordsList: MutableList<Int> = mutableListOf()
     private lateinit var aLoading: ALoading
-
     private var isGameInitialized = false
 
     private fun isNetworkAvailable(): Boolean {
@@ -66,19 +65,31 @@ GameFragment: Fragment() {
         val scrollView = binding.onlineLayout
 
         if (isNetworkAvailable()) {
-            offlineLayout.visibility = View.GONE
-            scrollView.visibility = View.VISIBLE
+            offlineLayout.visibility = LinearLayout.GONE
+            scrollView.visibility = ScrollView.VISIBLE
         } else {
-            offlineLayout.visibility = View.VISIBLE
-            scrollView.visibility = View.GONE
+            offlineLayout.visibility = LinearLayout.VISIBLE
+            scrollView.visibility = ScrollView.GONE
+        }
+    }
+
+    fun onTryAgainClick(view: View) {
+        if (isNetworkAvailable()) {
+            handleOfflineMode()
+            apiCall()
         }
     }
 
     private fun initializeGame() {
-        if (isGameInitialized) {
-            handleOfflineMode()
-            apiCall()
-            isGameInitialized = true
+        if (!isGameInitialized) {
+            if (isNetworkAvailable()) {
+                handleOfflineMode()
+                apiCall()
+                isGameInitialized = true
+            } else {
+                handleOfflineMode()
+            }
+
         }
     }
 
