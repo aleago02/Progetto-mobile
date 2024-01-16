@@ -1,16 +1,20 @@
 package com.example.playersquiz.ui.game
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.playersquiz.MyCacheManager
 import com.example.playersquiz.R
+import com.example.playersquiz.data.MyCacheManager
 import com.example.playersquiz.databinding.GameFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.players.Players
@@ -38,6 +42,12 @@ GameFragment: Fragment() {
     private var cache: String = ""
     private val cacheFileName = "footbal"
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities((connectivityManager.activeNetwork))
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +59,6 @@ GameFragment: Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.submit.setOnClickListener { onSubmitWord() }
@@ -58,15 +67,40 @@ GameFragment: Fragment() {
         binding.record.text = getString(R.string.record, cache)
     }
 
+    private fun handleOfflineMode() {
+        val offlineLayout = binding.offlineLayout
+        val scrollView = binding.onlineLayout
+
+        if (isNetworkAvailable()) {
+            offlineLayout.visibility = LinearLayout.GONE
+            scrollView.visibility = ScrollView.VISIBLE
+        } else {
+            offlineLayout.visibility = LinearLayout.VISIBLE
+            scrollView.visibility = ScrollView.GONE
+        }
+    }
+
+    fun onTryAgainClick(view: View) {
+        if (isNetworkAvailable()) {
+            handleOfflineMode()
+            apiCall()
+        }
+    }
+
     private fun initializeGame() {
         if (!isGameInitialized) {
-            apiCall()
-            isGameInitialized = true
+            if (isNetworkAvailable()) {
+                handleOfflineMode()
+                apiCall()
+                isGameInitialized = true
+            } else {
+                handleOfflineMode()
+            }
+
         }
     }
 
     private fun apiCall(){
-        //qui da inserire inizio caricamento
         Log.d("GameFragment" ,  "apicall")
         aLoading = ALoading(this.activity)
         aLoading.startLoadingDialog()

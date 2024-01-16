@@ -1,15 +1,19 @@
 package com.example.playersquiz.ui.game
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.playersquiz.MyCacheManager
 import com.example.playersquiz.R
+import com.example.playersquiz.data.MyCacheManager
 import com.example.playersquiz.databinding.NbaFragmentBinding
 import com.example.playersquiz.remote.RemoteApi
 import com.example.playersquiz.remote.models.playernba.Data
@@ -26,17 +30,26 @@ class NbaFragment: Fragment() {
     private val viewModel: GameNbaViewModel by viewModels()
     private lateinit var binding: NbaFragmentBinding
     private var wordsList: MutableList<Int> = mutableListOf()
-    private lateinit var aLoding: ALoading
+    private lateinit var aLoading: ALoading
     private lateinit var cacheManager: MyCacheManager
     private var cache: String = ""
     private val cacheFileName = "nba"
+
+    private var isGameInitialized = false
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities((connectivityManager.activeNetwork))
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = NbaFragmentBinding.inflate(inflater, container, false)
-        aLoding = ALoading(this.activity)
+        initializeGame()
+        aLoading = ALoading(this.activity)
         cacheManager = MyCacheManager(requireContext())
         apiCall()
         Log.d("GameFragment", "GameFragment created/re-created!")
@@ -46,18 +59,47 @@ class NbaFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
         this.cache = cacheManager.readDataFromCache(cacheFileName)
         binding.record.text = getString(R.string.record, cache)
+    }
 
+    private fun handleOfflineMode() {
+        val offlineLayout = binding.offlineLayout
+        val scrollView = binding.onlineLayout
+
+        if (isNetworkAvailable()) {
+            offlineLayout.visibility = LinearLayout.GONE
+            scrollView.visibility = ScrollView.VISIBLE
+        } else {
+            offlineLayout.visibility = LinearLayout.VISIBLE
+            scrollView.visibility = ScrollView.GONE
+        }
+    }
+
+    fun onTryAgainClick(view: View) {
+        if (isNetworkAvailable()) {
+            handleOfflineMode()
+            apiCall()
+        }
+    }
+
+    private fun initializeGame() {
+        if (!isGameInitialized) {
+            if (isNetworkAvailable()) {
+                handleOfflineMode()
+                apiCall()
+                isGameInitialized = true
+            } else {
+                handleOfflineMode()
+            }
+
+        }
     }
 
     private fun apiCall(){
-        //qui da inserire inizio caricamento
-        aLoding.startLoadingDialog()
+        aLoading.startLoadingDialog()
         val id = generateRandomPage()
         if (wordsList.contains(id)) {
             apiCall()
@@ -70,7 +112,7 @@ class NbaFragment: Fragment() {
 
     private fun createAll(){
         //qui fine caricamento
-        aLoding.dismissDialog()
+        aLoading.dismissDialog()
         updateNextStats()
         updateNextWordOnScreen()
         updateScoreOnScreen()
@@ -204,7 +246,7 @@ class NbaFragment: Fragment() {
                     if (response.isSuccessful) {
                         Log.d("GameFragment", "responseBody"+response.body())
                         if(response.body()!!.height_feet == null || response.body()!!.height_inches == null || response.body()!!.position == ""){
-                            aLoding.dismissDialog()
+                            aLoading.dismissDialog()
                             apiCall()
                         }else{
                             val responseBody = response.body()!!
