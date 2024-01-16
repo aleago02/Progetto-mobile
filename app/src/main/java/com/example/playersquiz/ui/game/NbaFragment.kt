@@ -47,11 +47,10 @@ class NbaFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = NbaFragmentBinding.inflate(inflater, container, false)
-        initializeGame()
         aLoading = ALoading(this.activity)
         cacheManager = MyCacheManager(requireContext())
-        apiCall()
+        binding = NbaFragmentBinding.inflate(inflater, container, false)
+        initializeGame()
         Log.d("GameFragment", "GameFragment created/re-created!")
         return binding.root
     }
